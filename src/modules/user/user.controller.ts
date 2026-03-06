@@ -1,27 +1,21 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { UserService } from 'src/modules/user/user.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
+
   @Get()
   index(@Query() query: any) {
-    return {
-      keyword: query.keyword,
-      category: query.category,
-    };
+    return [this.userService.getUsers(), this.authService.login()];
   }
 
-  @Get('/:id')
+  @Get(':id')
   find(@Param('id') id: string) {
     return `user ${id}`;
-  }
-
-  @Post()
-  create(@Body() body: any) {
-    return body;
   }
 }
