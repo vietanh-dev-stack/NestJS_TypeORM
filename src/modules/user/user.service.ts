@@ -1,5 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/modules/user/dto/update-user.dto';
 import { User } from 'src/modules/user/user.entity';
 import { Repository } from 'typeorm';
 
@@ -20,12 +22,12 @@ export class UserService {
     });
   }
 
-  create(data: Partial<User>): Promise<User> {
+  create(data: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(data);
     return this.userRepository.save(user);
   }
 
-  async update(id: number, data: Partial<User>) {
+  async update(id: number, data: UpdateUserDto) {
     const user = await this.findOne(id);
 
     if (!user) {
