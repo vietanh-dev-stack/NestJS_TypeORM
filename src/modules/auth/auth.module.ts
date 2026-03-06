@@ -1,14 +1,18 @@
-/* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
-import { AuthController } from 'src/modules/auth/auth.controller';
-import { AuthService } from 'src/modules/auth/auth.service';
-import { UserModule } from 'src/modules/user/user.module';
+import { Module } from '@nestjs/common'
+import { JwtModule } from '@nestjs/jwt'
+import { AuthService } from './auth.service'
+import { AuthController } from './auth.controller'
+import { UserModule } from 'src/modules/user/user.module'
 
 @Module({
-  imports: [UserModule],
-  controllers: [AuthController],
+  imports: [
+    UserModule,
+    JwtModule.register({
+      secret: 'MY_SECRET_KEY',
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
   providers: [AuthService],
-  exports: [AuthService]
+  controllers: [AuthController],
 })
-export class AuthModule { }
-
+export class AuthModule {}
