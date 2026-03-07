@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
@@ -29,17 +30,20 @@ export class PostController {
   }
 
   @Post()
-  create(@Body() dto: CreatePostDto) {
-    return this.postService.create(dto);
+  create(@Body() dto: CreatePostDto, @Request() req: any) {
+    const userId = req.user.id;
+    return this.postService.create(dto, userId);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
-    return this.postService.update(Number(id), dto);
+  update(@Param('id') id: string, @Body() dto: UpdatePostDto, @Request() req: any) {
+    const userId = req.user.id;
+    return this.postService.update(Number(id), dto, userId);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.postService.delete(Number(id));
+  delete(@Param('id') id: string, @Request() req: any) {
+    const userId = req.user.id;
+    return this.postService.delete(Number(id), userId);
   }
 }
