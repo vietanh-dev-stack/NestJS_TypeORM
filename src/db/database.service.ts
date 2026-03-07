@@ -1,9 +1,18 @@
-/* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm'
 
-@Injectable()
-export class DatabaseService {
-    findAll() {
-        return 'find all';
-    }
-}
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: '12345678',
+      database: 'NestJS_TypeORM',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+  ],
+})
+export class DatabaseModule {}

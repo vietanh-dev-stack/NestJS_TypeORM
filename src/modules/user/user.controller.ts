@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { User } from 'src/modules/user/user.entity';
 import { UserService } from 'src/modules/user/user.service';
@@ -9,11 +19,9 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
-  // GET /userrs
+  // GET /users
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -31,7 +39,7 @@ export class UserController {
     return this.userService.create(dto);
   }
 
-  // PUT //users/1
+  // PUT /users/1
   @Put(':id')
   update(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.userService.update(Number(id), dto);

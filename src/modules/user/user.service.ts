@@ -11,7 +11,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
@@ -23,9 +23,9 @@ export class UserService {
     });
   }
 
-  async findByName(name: string): Promise<User | null> {
+  async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({
-      where: {name},
+      where: {email},
     })
   }
 
