@@ -7,12 +7,14 @@ import { PostModule } from 'src/modules/post/post.module';
 import { DatabaseModule } from 'src/db/database.service';
 import { CommentModule } from 'src/modules/comment/comment.module';
 import { LikeModule } from 'src/modules/like/like.module';
+import { CategoryModule } from 'src/modules/category/category.module';
 
 @Module({
   imports: [
     DatabaseModule,
     UserModule,
     AuthModule,
+    CategoryModule,
     PostModule,
     CommentModule,
     LikeModule,

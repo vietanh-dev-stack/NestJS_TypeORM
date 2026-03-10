@@ -36,7 +36,11 @@ export class PostController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePostDto, @Request() req: any) {
+  update(
+    @Param('id') id: string,
+    @Body() dto: UpdatePostDto,
+    @Request() req: any,
+  ) {
     const userId = req.user.id;
     return this.postService.update(Number(id), dto, userId);
   }

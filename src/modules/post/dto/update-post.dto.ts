@@ -1,12 +1,11 @@
-import { Optional } from '@nestjs/common';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdatePostDto {
-  @Optional()
+  @IsOptional()
   @IsString()
   title?: string;
 
-  @Optional()
+  @IsOptional()
   @IsString()
   content?: string;
 }
