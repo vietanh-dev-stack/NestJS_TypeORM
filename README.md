@@ -1,98 +1,568 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# NestJS Notes
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 1. Giới thiệu NestJS
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**NestJS** là framework backend cho Node.js được xây dựng bằng **TypeScript** và dựa trên kiến trúc **modular + dependency injection**.
 
-## Description
+NestJS sử dụng nhiều concept của Angular như:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* Module
+* Controller
+* Service
+* Dependency Injection
 
-## Project setup
+NestJS thường dùng để xây dựng:
 
-```bash
-$ npm install
+* REST API
+* GraphQL API
+* Microservices
+* Real-time apps
+
+---
+
+# 2. Kiến trúc cơ bản
+
+Một project NestJS thường có cấu trúc:
+
+```
+src
+ ├── app.module.ts
+ ├── main.ts
+ │
+ ├── modules
+ │   ├── user
+ │   │   ├── user.module.ts
+ │   │   ├── user.controller.ts
+ │   │   ├── user.service.ts
+ │   │   └── user.entity.ts
+ │
+ │   ├── post
+ │   └── auth
 ```
 
-## Compile and run the project
+Luồng request:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+Client Request
+      ↓
+Middleware
+      ↓
+Guard
+      ↓
+Interceptor (before)
+      ↓
+Controller
+      ↓
+Service
+      ↓
+Database
+      ↓
+Interceptor (after)
+      ↓
+Response
 ```
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ npm run test
+# 3. Module
 
-# e2e tests
-$ npm run test:e2e
+Module là đơn vị tổ chức code trong NestJS.
 
-# test coverage
-$ npm run test:cov
+```
+@Module({
+  imports: [],
+  controllers: [],
+  providers: [],
+  exports: []
+})
 ```
 
-## Deployment
+Ví dụ:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```ts
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService]
+})
+export class UserModule {}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Giải thích:
 
-## Resources
+| Thành phần  | Mục đích                |
+| ----------- | ----------------------- |
+| imports     | import module khác      |
+| controllers | định nghĩa API          |
+| providers   | service hoặc provider   |
+| exports     | cho module khác sử dụng |
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# 4. Controller
 
-## Support
+Controller dùng để định nghĩa **API endpoints**.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```ts
+@Controller('users')
+export class UserController {
 
-## Stay in touch
+  constructor(private readonly userService: UserService) {}
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
 
-## License
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Decorators thường dùng:
+
+| Decorator  | Mục đích    |
+| ---------- | ----------- |
+| @Get()     | GET API     |
+| @Post()    | POST API    |
+| @Put()     | UPDATE      |
+| @Delete()  | DELETE      |
+| @Param()   | lấy param   |
+| @Body()    | lấy body    |
+| @Request() | lấy request |
+
+---
+
+# 5. Service
+
+Service chứa **business logic**.
+
+```ts
+@Injectable()
+export class UserService {
+
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>
+  ) {}
+
+  findAll() {
+    return this.userRepo.find();
+  }
+
+}
+```
+
+---
+
+# 6. Dependency Injection
+
+Dependency Injection (DI) là cơ chế **NestJS tự động cung cấp dependency cho class**.
+
+Ví dụ:
+
+```
+UserController → cần UserService
+UserService → cần Repository<User>
+```
+
+NestJS tự inject:
+
+```ts
+constructor(private readonly userService: UserService) {}
+```
+
+Lợi ích:
+
+* loose coupling
+* dễ test
+* dễ maintain
+
+---
+
+# 7. Provider
+
+Provider là class được NestJS quản lý và inject.
+
+Ví dụ:
+
+```
+Service
+Repository
+Custom Provider
+Factory
+```
+
+Custom provider:
+
+```
+{
+  provide: 'CONFIG',
+  useValue: { port: 3000 }
+}
+```
+
+---
+
+# 8. Entity (TypeORM)
+
+Entity đại diện cho bảng database.
+
+```ts
+@Entity()
+export class User {
+
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+}
+```
+
+---
+
+# 9. Repository
+
+Repository dùng để thao tác database.
+
+```
+@InjectRepository(User)
+private readonly repo: Repository<User>
+```
+
+Các method phổ biến:
+
+```
+find()
+findOne()
+save()
+update()
+delete()
+create()
+```
+
+---
+
+# 10. DTO (Data Transfer Object)
+
+DTO dùng để validate dữ liệu input.
+
+Ví dụ:
+
+```
+create-user.dto.ts
+```
+
+```ts
+export class CreateUserDto {
+
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
+
+}
+```
+
+Sử dụng:
+
+```
+@Post()
+create(@Body() dto: CreateUserDto)
+```
+
+---
+
+# 11. Validation
+
+NestJS dùng:
+
+```
+class-validator
+class-transformer
+```
+
+Enable global validation:
+
+```
+app.useGlobalPipes(new ValidationPipe());
+```
+
+---
+
+# 12. Authentication (JWT)
+
+NestJS thường dùng JWT.
+
+Flow:
+
+```
+Login
+   ↓
+generate JWT
+   ↓
+Client gửi token
+   ↓
+Guard verify token
+```
+
+JWT strategy:
+
+```
+PassportStrategy
+```
+
+Guard:
+
+```
+@UseGuards(JwtAuthGuard)
+```
+
+---
+
+# 13. Guards
+
+Guard dùng để **kiểm tra quyền truy cập API**.
+
+Ví dụ:
+
+```
+AuthGuard
+RolesGuard
+```
+
+Lifecycle:
+
+```
+Request → Guard → Controller
+```
+
+---
+
+# 14. Interceptor
+
+Interceptor có thể:
+
+* transform response
+* logging
+* caching
+* timeout
+
+Ví dụ:
+
+```
+@Injectable()
+export class TransformInterceptor implements NestInterceptor {
+
+  intercept(context: ExecutionContext, next: CallHandler) {
+
+    return next.handle().pipe(
+      map(data => ({
+        success: true,
+        data
+      }))
+    );
+
+  }
+
+}
+```
+
+---
+
+# 15. Middleware
+
+Middleware chạy trước controller.
+
+Ví dụ:
+
+```
+Logger middleware
+CORS
+body parser
+```
+
+---
+
+# 16. Exception Filter
+
+Dùng để xử lý lỗi global.
+
+```
+@Catch(HttpException)
+```
+
+---
+
+# 17. Relation (TypeORM)
+
+Các loại quan hệ:
+
+| Quan hệ    | Ví dụ          |
+| ---------- | -------------- |
+| OneToMany  | User → Posts   |
+| ManyToOne  | Post → User    |
+| ManyToMany | Post → Tags    |
+| OneToOne   | User → Profile |
+
+Ví dụ:
+
+```
+User 1 --- n Post
+```
+
+```ts
+@OneToMany(() => Post, post => post.user)
+posts: Post[];
+```
+
+---
+
+# 18. QueryBuilder
+
+Dùng cho query phức tạp.
+
+```
+createQueryBuilder()
+```
+
+Ví dụ:
+
+```
+postRepository
+  .createQueryBuilder("post")
+  .leftJoinAndSelect("post.user", "user")
+  .getMany()
+```
+
+---
+
+# 19. Pagination
+
+Ví dụ:
+
+```
+GET /posts?page=1&limit=10
+```
+
+```
+skip = (page-1)*limit
+take = limit
+```
+
+---
+
+# 20. Cấu trúc backend blog system
+
+Ví dụ hệ thống:
+
+```
+User
+Post
+Comment
+Like
+Category
+Auth
+```
+
+Quan hệ:
+
+```
+User
+ ├── Posts
+ ├── Comments
+ └── Likes
+
+Post
+ ├── Comments
+ ├── Likes
+ └── Category
+```
+
+---
+
+# 21. Best Practices
+
+* tách module rõ ràng
+* dùng DTO validate input
+* không return password
+* dùng interceptor transform response
+* dùng guard cho authentication
+
+---
+
+# 22. Thứ tự request lifecycle
+
+```
+Request
+ ↓
+Middleware
+ ↓
+Guard
+ ↓
+Interceptor (before)
+ ↓
+Pipe
+ ↓
+Controller
+ ↓
+Service
+ ↓
+Interceptor (after)
+ ↓
+Response
+```
+
+---
+
+# 23. Kiến trúc production
+
+Một backend NestJS lớn thường có:
+
+```
+common
+ ├── interceptors
+ ├── filters
+ ├── decorators
+ └── guards
+
+modules
+ ├── auth
+ ├── users
+ ├── posts
+ ├── comments
+ └── likes
+```
+
+---
+
+# 24. Công nghệ thường đi cùng NestJS
+
+* PostgreSQL
+* TypeORM / Prisma
+* Redis
+* Docker
+* Swagger
+* GraphQL
+* WebSocket
+
+---
+
+# 25. Mục tiêu khi học NestJS
+
+Có thể xây dựng:
+
+* Blog API
+* Social Network API
+* E-commerce API
+* Real-time chat
+* Microservices
+
+---
+
+# End
